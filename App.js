@@ -1,11 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView } from 'react-native/types_generated/index';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <View style={styles.containerTitle}>
+        <Text>Instagram Notifications</Text>
+        <TouchableOpacity>
+          <Text>No leídas: </Text>
+        </TouchableOpacity>
+      </View>
+      <ScrollView>
+
+      </ScrollView>
     </View>
   );
 }
