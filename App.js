@@ -14,7 +14,11 @@ export default function App() {
   useEffect(()=>{
     const ran = Math.floor(Math.random() * 9000) + 1000; 
     setRandomNum(ran);
-  },[])
+    },[])
+
+  useEffect(() => {
+    console.log("Notificaciones actualizadas:", notificaciones);
+    }, [notificaciones]);
 
   useEffect(()=>{
     const interval = setInterval(()=>{
@@ -25,10 +29,12 @@ export default function App() {
         imagen: "./assets/images/user" + rand + ".jpg",
         leida: false
       };
+      console.log("Nueva notificación:", notificacion);
         setNotificaciones(prev => [notificacion, ...prev]);
         setNoleidas(prev => prev + 1);
-    },randomNum)  
-  },[randomNum]);
+    },randomNum);
+      return () => clearInterval(interval); 
+      }, [randomNum]);
 
   const leido= ((indice)=>{
     for(i = 0;i<notificaciones.length;i++){
