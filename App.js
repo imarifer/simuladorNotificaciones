@@ -1,14 +1,39 @@
 import { StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function App() {
-  const [noLeidas, setNoLeidas] = useState(0);
+  const [notificaciones,setNotificaciones] = useState([]);
+  const [noleidas,setNoleidas] = useState(0);
+  const [randomNum,setRandomNum] = useState(5);
+
+  const lista = ["Pepe","Juan","Carlos","Javier","Fernando","Edgar"];
+  const mensajes = ["liked your post","started following you","commented: nice!","shared your photo","unfollowed you","blocked you"];
+
+  useEffect(()=>{
+    const ran = Math.floor(Math.random() * 9000) + 1000; 
+    setRandomNum(ran);
+  },[])
+
+  useEffect(()=>{
+    const interval = setInterval(()=>{
+      const rand = Math.floor(Math.random() * 6);
+      const notificacion = {
+        usuario: lista[rand],
+        mensaje: mensajes[rand],
+        imagen: "./assets/images/user" + rand + ".jpg"
+      };
+
+        setNotificaciones(prev => [notificacion, ...prev]);
+        setNoleidas(noleidas+1);
+    },randomNum)
+  },[randomNum]);
+
 
   return (
     <View style={styles.container}>
       <View style={styles.containerTitle}>
         <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>Instagram Notifications</Text>
-        <Text style={styles.contador}>No leídas: {noLeidas}</Text>
+        <Text style={styles.contador}>Unread: {noleidas}</Text>
       </View>
       <ScrollView style={styles.scrollView}>
         
