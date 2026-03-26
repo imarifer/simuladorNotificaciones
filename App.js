@@ -5,7 +5,6 @@ export default function App() {
   const [notificaciones,setNotificaciones] = useState([]);
   const [noleidas,setNoleidas] = useState(0);
   const [randomNum,setRandomNum] = useState(5);
-  const [color,setColor] = useState("#B8B6B6")
 
   const lista = ["Pepe","Juan","Carlos","Javier","Fernando","Edgar"];
   const mensajes = ["liked your post","started following you","commented: nice!","shared your photo","unfollowed you","blocked you"];
@@ -22,6 +21,7 @@ export default function App() {
 
   useEffect(()=>{
     const interval = setInterval(()=>{
+      console.log("Numero random:" +randomNum);
       const rand = Math.floor(Math.random() * 6);
       const notificacion = {
         usuario: lista[rand],
@@ -29,7 +29,6 @@ export default function App() {
         imagen: "./assets/images/user" + rand + ".jpg",
         leida: false
       };
-      console.log("Nueva notificación:", notificacion);
         setNotificaciones(prev => [notificacion, ...prev]);
         setNoleidas(prev => prev + 1);
     },randomNum);
