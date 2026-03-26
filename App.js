@@ -10,6 +10,9 @@ export default function App() {
   const lista = ["Pepe","Juan","Carlos","Javier","Fernando","Edgar"];
   const mensajes = ["liked your post","started following you","commented: nice!","shared your photo","unfollowed you","blocked you"];
 
+  useEffect(() =>{
+
+  }, notificaciones)
 
   useEffect(()=>{
     const ran = Math.floor(Math.random() * 9000) + 1000; 
@@ -18,6 +21,7 @@ export default function App() {
 
   useEffect(()=>{
     const interval = setInterval(()=>{
+      console.log(notificacion);
       const rand = Math.floor(Math.random() * 6);
       const notificacion = {
         usuario: lista[rand],
@@ -46,7 +50,6 @@ export default function App() {
         <Text style={styles.contador}>Unread: {noleidas}</Text>
       </View>
       <ScrollView style={styles.scrollView}>
-        
       </ScrollView>
     </View>
   );
