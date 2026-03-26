@@ -5,7 +5,6 @@ export default function App() {
   const [notificaciones,setNotificaciones] = useState([]);
   const [noleidas,setNoleidas] = useState(0);
   const [randomNum,setRandomNum] = useState(5);
-  const [color,setColor] = useState("#B8B6B6")
 
   const lista = ["Pepe","Juan","Carlos","Javier","Fernando","Edgar"];
   const mensajes = ["liked your post","started following you","commented: nice!","shared your photo","unfollowed you","blocked you"];
@@ -17,11 +16,14 @@ export default function App() {
   useEffect(()=>{
     const ran = Math.floor(Math.random() * 9000) + 1000; 
     setRandomNum(ran);
-  },[])
+    },[])
+
+  useEffect(() => {
+    console.log("Notificaciones actualizadas:", notificaciones);
+    }, [notificaciones]);
 
   useEffect(()=>{
     const interval = setInterval(()=>{
-      console.log(notificacion);
       const rand = Math.floor(Math.random() * 6);
       const notificacion = {
         usuario: lista[rand],
@@ -31,11 +33,14 @@ export default function App() {
       };
         setNotificaciones(prev => [notificacion, ...prev]);
         setNoleidas(prev => prev + 1);
-    },randomNum)  
-  },[randomNum]);
+        const nuevoTiempo = Math.floor(Math.random() * 9000) + 1000;
+        setRandomNum(nuevoTiempo);
+    },randomNum);
+      return () => clearInterval(interval); 
+      }, [randomNum]);
 
   const leido= ((indice)=>{
-    for(i = 0;i<notificaciones.length;i++){
+    for(let i = 0;i<notificaciones.length;i++){
       if(i==indice){
         notificaciones[i].leida = true;
         setNoleidas(prev => prev - 1);
