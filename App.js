@@ -5,9 +5,11 @@ export default function App() {
   const [notificaciones,setNotificaciones] = useState([]);
   const [noleidas,setNoleidas] = useState(0);
   const [randomNum,setRandomNum] = useState(5);
+  const [color,setColor] = useState("#B8B6B6")
 
   const lista = ["Pepe","Juan","Carlos","Javier","Fernando","Edgar"];
   const mensajes = ["liked your post","started following you","commented: nice!","shared your photo","unfollowed you","blocked you"];
+
 
   useEffect(()=>{
     const ran = Math.floor(Math.random() * 9000) + 1000; 
@@ -20,14 +22,22 @@ export default function App() {
       const notificacion = {
         usuario: lista[rand],
         mensaje: mensajes[rand],
-        imagen: "./assets/images/user" + rand + ".jpg"
+        imagen: "./assets/images/user" + rand + ".jpg",
+        leida: false
       };
-
         setNotificaciones(prev => [notificacion, ...prev]);
         setNoleidas(noleidas+1);
-    },randomNum)
+    },randomNum)  
   },[randomNum]);
 
+  const leido= ((indice)=>{
+    for(i = 0;i<notificaciones.length;i++){
+      if(i==indice){
+        norificaciones[i].leida = true;
+        setNoleidas(noleidas-1);
+      }
+    }
+  })
 
   return (
     <View style={styles.container}>
