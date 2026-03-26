@@ -26,15 +26,15 @@ export default function App() {
         leida: false
       };
         setNotificaciones(prev => [notificacion, ...prev]);
-        setNoleidas(noleidas+1);
+        setNoleidas(prev => prev + 1);
     },randomNum)  
   },[randomNum]);
 
   const leido= ((indice)=>{
     for(i = 0;i<notificaciones.length;i++){
       if(i==indice){
-        norificaciones[i].leida = true;
-        setNoleidas(noleidas-1);
+        notificaciones[i].leida = true;
+        setNoleidas(prev => prev - 1);
       }
     }
   })
