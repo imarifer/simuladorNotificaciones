@@ -31,12 +31,14 @@ export default function App() {
       };
         setNotificaciones(prev => [notificacion, ...prev]);
         setNoleidas(prev => prev + 1);
+        const nuevoTiempo = Math.floor(Math.random() * 9000) + 1000;
+        setRandomNum(nuevoTiempo);
     },randomNum);
       return () => clearInterval(interval); 
       }, [randomNum]);
 
   const leido= ((indice)=>{
-    for(i = 0;i<notificaciones.length;i++){
+    for(let i = 0;i<notificaciones.length;i++){
       if(i==indice){
         notificaciones[i].leida = true;
         setNoleidas(prev => prev - 1);
