@@ -1,17 +1,39 @@
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useState, useEffect } from 'react';
 
-export default function App() {
-  const [notificaciones,setNotificaciones] = useState([]);
+const Notificacion = ({user, message, image, cambiarLeidos}) => {
+    const [leido, setLeido] = useState(false);
+    const imagenes = [require("./assets/images/user1.jpg"), require("./assets/images/user2.jpg"), require("./assets/images/user3.jpg"), 
+      require("./assets/images/user4.jpg"), require("./assets/images/user5.jpg"), require("./assets/images/user6.jpg")
+    ];
+
+    const handleCambiarNotificacion = (disminuir) => {
+      if(leido === false){
+        setLeido(true);
+        disminuir();
+      }
+    }
+
+    return(
+      <TouchableOpacity style={{backgroundColor: leido ? 'black' : '#1e1e1e', ...styles.buttonNotificacion}} onPress={() => {handleCambiarNotificacion(cambiarLeidos)}}>
+        <View style={styles.containerImagen}>
+          <Image style={styles.imagen} source={imagenes[image]} />
+        </View>
+        <Text style={{color: 'white', fontWeight: 'bold'}}>{user}</Text>
+        <Text style={{color: 'white'}}>{message}</Text>
+      </TouchableOpacity>
+    );
+}
+
+const App = () => {
   const [noleidas,setNoleidas] = useState(0);
+  const [notificaciones,setNotificaciones] = useState([]);
   const [randomNum,setRandomNum] = useState(5);
 
   const lista = ["Pepe","Juan","Carlos","Javier","Fernando","Edgar"];
   const mensajes = ["liked your post","started following you","commented: nice!","shared your photo","unfollowed you","blocked you"];
-
-  useEffect(() =>{
-
-  }, notificaciones)
 
   useEffect(()=>{
     const ran = Math.floor(Math.random() * 9000) + 1000; 
@@ -28,8 +50,8 @@ export default function App() {
       const notificacion = {
         usuario: lista[rand],
         mensaje: mensajes[rand],
-        imagen: "./assets/images/user" + rand + ".jpg",
-        leida: false
+        imagen: rand,
+        id: Math.random().toString(36).concat(Date.now().toString()),
       };
         setNotificaciones(prev => [notificacion, ...prev]);
         setNoleidas(prev => prev + 1);
@@ -48,17 +70,28 @@ export default function App() {
     }
   })
 
+  const handleLeidos = () => {
+    setNoleidas(noleidas => noleidas - 1);
+  }
+
   return (
-    <View style={styles.container}>
-      <View style={styles.containerTitle}>
-        <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>Instagram Notifications</Text>
-        <Text style={styles.contador}>Unread: {noleidas}</Text>
-      </View>
-      <ScrollView style={styles.scrollView}>
-      </ScrollView>
-    </View>
+    <SafeAreaProvider style={{flex: 1}}>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.containerTitle}>
+          <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>Instagram Notifications</Text>
+          <Text style={styles.contador}>Unread: {noleidas}</Text>
+        </View>
+        <ScrollView style={styles.scrollView}>
+          {notificaciones.map((item) => (
+            <Notificacion user={item.user} message={item.mensaje} image={item.imagen} key={item.id} cambiarLeidos={() => {handleLeidos()}} />
+          ))}
+        </ScrollView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
+
+export default App;
 
 const styles = StyleSheet.create({
   container: {
@@ -66,28 +99,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 50
   },
   containerTitle: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderBottomWidth: 0.5,
-    borderColor: 'white',
     width: '100%',
     height: '8%',
     gap: 10,
   },
   scrollView: {
-    marginBottom: 50,
-    borderBottomWidth: 1,
-    borderLeftWidth: 1, 
-    borderRightWidth: 1,
-    borderStyle: 'solid',
-    borderColor: 'white',
-    width: '100%', 
-    height: '80%'
+    flex: 1, 
+    borderWidth: 1, 
+    width: "100%",
+    backgroundColor: 'black'
   },
   contador: {
     color: 'white',
@@ -100,7 +126,33 @@ const styles = StyleSheet.create({
     borderColor: '#405DE6',
     borderRadius: 15,
     width: '35%', 
-    height: '50%',
+    height: 'auto',
     backgroundColor: '#405DE6'
+  },
+  buttonNotificacion:{
+    borderStyle: 'solid',
+    borderWidth: 0.5,
+    borderColor: 'black',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    height: 50,
+    borderRadius: 15,
+    paddingLeft: 10,
+    marginTop: 5,
+    gap: 5
+  },
+  containerImagen:{
+    borderWidth: 1,
+    width: '10%',
+    height: '80%',
+    borderRadius: "100%",
+  },
+  imagen:{
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+    borderRadius: 100
   }
 });
