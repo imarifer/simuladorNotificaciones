@@ -12,7 +12,7 @@ const Notificacion = ({user, message, image, cambiarLeidos, todos}) => {
 
     /*Función que cambiara el color para efectos visuales de notificaciones leidas y ejecutara una función heredada por props*/
     const handleCambiarNotificacion = (disminuir) => {
-      if(leido === false){
+      if(leido === false && todos !== true){
         setLeido(true);
         disminuir();
       }
@@ -62,21 +62,18 @@ const App = () => {
         id: Math.random().toString(36).concat(Date.now().toString()),
       };
         setNotificaciones(prev => [notificacion, ...prev]);
-        setNoleidas(prev => prev + 1);
+        setNoleidas((prev) => {
+          if(todas !== true){
+            return prev + 1;
+          }else{
+            return 0;
+          }
+        });
         const nuevoTiempo = Math.floor(Math.random() * 9000) + 1000;
         setRandomNum(nuevoTiempo);
     },randomNum);
       return () => clearInterval(interval); 
-      }, [randomNum]);
-
-  /*const leido= ((indice)=>{
-    for(let i = 0;i<notificaciones.length;i++){
-      if(i==indice){
-        notificaciones[i].leida = true;
-        setNoleidas(prev => prev - 1);
-      }
-    }
-  })*/
+      }, [randomNum, todas]);
 
   /*Función que disminuye las notificaciones no leidas, que hereda el componente Notificacion*/
   const handleLeidos = () => {
@@ -89,7 +86,7 @@ const App = () => {
         <View style={styles.containerTitle}>
           <Text style={{fontSize: 18, fontWeight: 'bold', color: 'white'}}>Notifications</Text>
           <Text style={styles.contador}>Unread: {noleidas}</Text>
-          <TouchableOpacity style={styles.buttonTodas} onPress={() => setTodas(true)}>
+          <TouchableOpacity style={styles.buttonTodas} onPress={() => {setTodas(true); setNoleidas(0)}}>
             <Text style={{color: 'white', fontSize: 15, fontWeight: 'bold'}}>Mark as read</Text>
           </TouchableOpacity>
         </View>
