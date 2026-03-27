@@ -4,7 +4,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useState, useEffect } from 'react';
 
 /*Definición del componente de Notificacion*/
-const Notificacion = ({user, message, image, cambiarLeidos}) => {
+const Notificacion = ({user, message, image, cambiarLeidos, todos}) => {
     const [leido, setLeido] = useState(false);
     const imagenes = [require("./assets/images/user1.jpg"), require("./assets/images/user2.jpg"), require("./assets/images/user3.jpg"), 
       require("./assets/images/user4.jpg"), require("./assets/images/user5.jpg"), require("./assets/images/user6.jpg")
@@ -19,7 +19,7 @@ const Notificacion = ({user, message, image, cambiarLeidos}) => {
     }
 
     return(
-      <TouchableOpacity style={{backgroundColor: leido ? 'black' : '#1e1e1e', ...styles.buttonNotificacion}} onPress={() => {handleCambiarNotificacion(cambiarLeidos)}}>
+      <TouchableOpacity style={{backgroundColor: leido || todos ? 'black' : '#1e1e1e', ...styles.buttonNotificacion}} onPress={() => {handleCambiarNotificacion(cambiarLeidos)}}>
         <View style={styles.containerImagen}>
           <Image style={styles.imagen} source={imagenes[image]} />
         </View>
@@ -34,6 +34,7 @@ const App = () => {
   const [noleidas,setNoleidas] = useState(0);
   const [notificaciones,setNotificaciones] = useState([]);
   const [randomNum,setRandomNum] = useState(5);
+  const [todas, setTodas] = useState(false);
 
   /*Datos a usar ya que no contamos con una BD o API externa*/
   const lista = ["Pepe","Juan","Carlos","Javier","Fernando","Edgar"];
@@ -86,13 +87,20 @@ const App = () => {
     <SafeAreaProvider style={{flex: 1}}>
       <SafeAreaView style={styles.container}>
         <View style={styles.containerTitle}>
-          <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>Notifications</Text>
+          <Text style={{fontSize: 18, fontWeight: 'bold', color: 'white'}}>Notifications</Text>
           <Text style={styles.contador}>Unread: {noleidas}</Text>
+          <TouchableOpacity style={styles.buttonTodas} onPress={() => setTodas(true)}>
+            <Text style={{color: 'white', fontSize: 15, fontWeight: 'bold'}}>Mark as read</Text>
+          </TouchableOpacity>
         </View>
         <ScrollView style={styles.scrollView}>
-          {notificaciones.map((item) => (
-            <Notificacion user={item.user} message={item.mensaje} image={item.imagen} key={item.id} cambiarLeidos={() => {handleLeidos()}} />
-          ))}
+          {notificaciones.map((item) => {
+            if(todas){
+              return <Notificacion user={item.user} message={item.mensaje} image={item.imagen} todos={true} key={item.id} cambiarLeidos={() => {handleLeidos()}} />
+            }else{ 
+              return <Notificacion user={item.user} message={item.mensaje} image={item.imagen} todos={false} key={item.id} cambiarLeidos={() => {handleLeidos()}} />
+            }
+          })}
         </ScrollView>
       </SafeAreaView>
     </SafeAreaProvider>
@@ -116,7 +124,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: '8%',
-    gap: 10,
+    gap: 8,
   },
   scrollView: {
     flex: 1, 
@@ -129,14 +137,13 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
     textAlign: 'center',
     fontSize: 15,
-    fontWeight: 'bold',
     borderWidth: 1, 
     borderStyle: 'solid',
-    borderColor: '#405DE6',
+    borderColor: '#5f75e4',
     borderRadius: 15,
-    width: '35%', 
+    width: '30%', 
     height: 'auto',
-    backgroundColor: '#405DE6'
+    backgroundColor: '#5f75e4',
   },
   buttonNotificacion:{
     borderStyle: 'solid',
@@ -163,5 +170,18 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'cover',
     borderRadius: 100
+  },
+  buttonTodas:{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontWeight: 'bold',
+    borderWidth: 1, 
+    borderStyle: 'solid',
+    borderColor: '#405DE6',
+    borderRadius: 15,
+    width: '30%', 
+    height: 'auto',
+    backgroundColor: '#405DE6'
   }
 });
